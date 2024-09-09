@@ -1,20 +1,19 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { fetchCoinData } from "../../services/fetchCoinData";
 import { useQuery } from "react-query";
 import formatNumber from "../../helper/formatNumber";
 import { CurrencyContext } from "../../context/currencyContext";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import PageLoader from "../PageLoader/PageLoader";
 
 function CoinTable() {
 
     const navigate = useNavigate();
+
     const {currency} = useContext(CurrencyContext)
+
     const [page, setPage] = useState(1);
 
-    function handleCoinRedirect(id){
-        navigate(`/details/${id}`)
-    }
     const { data, isLoading, isError, error } = useQuery(['coin', page, currency], () => fetchCoinData(page, currency),
         {
             // retry: 2,
@@ -23,9 +22,19 @@ function CoinTable() {
             staleTime: 1000 * 60 * 2,
         }
     )
+
+    function handleCoinRedirect(id){
+        navigate(`/details/${id}`)
+    }
+
     if (isError) {
         return <div>Error: {error.message}</div>
     }
+
+    if(isLoading) {
+        return <PageLoader />
+    }
+
     return (
         <>
             <div className="flex p-2 mt-2 justify-between max-w-5xl m-auto bg-yellow-400 text-black font-semibold md:px-5 rounded-lg md:text-2xl text-lg">
@@ -73,6 +82,7 @@ function CoinTable() {
                     )
                 })}
                 
+                    <div className="w-full text-center my-6">Page {page}</div>
                 <div className="w-full flex justify-center gap-10 ">
                     <button 
                     disabled={page === 1}

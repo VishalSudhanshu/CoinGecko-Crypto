@@ -1,26 +1,15 @@
-import React, { useContext } from 'react'
-import { useQuery } from 'react-query'
-import { useParams } from 'react-router-dom'
-import fetchCoinDetails from '../services/fetchCoinDetails'
-import { CurrencyContext } from '../context/currencyContext'
+import React from 'react'
 import formatNumber from '../helper/formatNumber'
-import parse from 'html-react-parser';
 import PageLoader from '../components/PageLoader/PageLoader'
-import CoinInfo from '../components/CoinInfo/CoinInfo'
 import CoinInfoContainer from '../components/CoinInfo/CoinInfoContainer'
+import ExpandTextButton from '../components/ExpandTextButton/ExpandTextButton'
+import useFetchcCoinDetails from '../hooks/useFetchCoinDetails'
+import { useParams } from 'react-router-dom'
 
 const CoinDetailsPage = () => {
-
+    
     const { coinId } = useParams()
-    const { currency } = useContext(CurrencyContext);
-    const { data: coin, isLoading, isError } = useQuery(['coin', coinId], () => fetchCoinDetails(coinId),
-        {
-            // retry: 2,
-            // retryDelay: 1000,
-            cacheTime: 1000 * 60 * 2,
-            staleTime: 1000 * 60 * 2,
-        }
-    )
+   const {coin, currency, isError, isLoading} = useFetchcCoinDetails(coinId)
     if (isLoading) {
         return <PageLoader/>
     }
@@ -30,9 +19,9 @@ const CoinDetailsPage = () => {
 
 
     return (
-        <div className='flex flex-col md:flex-row  w-full p-4'>
+        <div className='flex flex-col md:flex-row  w-full md:px-4 sm:px-2 py-4'>
             <div
-                className="md:w-1/3 w-full flex flex-col items-center mt-6 md:mt-0 border-r-2 border-gray-500"
+                className="md:w-1/3 w-full flex flex-col items-center mt-6 md:mt-0 md:border-r-2 border-gray-500"
             >
                 <img
                     alt={coin?.name}
@@ -45,13 +34,13 @@ const CoinDetailsPage = () => {
                     {coin?.name}
                 </h1>
                 <p
-                    className="w-full px-6 py-4 text-justify"
+                    className="w-full px-3 md:px-6 py-4 text-justify"
                 >
-                    {parse(coin?.description?.en)}
+                    <ExpandTextButton text={coin?.description?.en}/>
                 </p>
 
                 <div
-                    className="w-full flex flex-col md:flex-row md:justify-around"
+                    className="w-full flex flex-col md:flex-row md:justify-around md:px-4 px-2 py-4"
                 >
                     <div 
                         className="flex items-center mb-4 md:mb-0"
@@ -75,7 +64,9 @@ const CoinDetailsPage = () => {
                 </div>
             </div>
 
-            <CoinInfoContainer coinId={coinId}/>
+            <div className="md:w-2/3 w-full ">
+                <CoinInfoContainer coinId={coinId} />
+            </div>
         </div>
     )
 }
