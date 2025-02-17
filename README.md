@@ -87,7 +87,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ## Contact
 
-Vishal Sudhanshu - [Email](mailto:vishalsudhanshu@example.com)
+Vishal Sudhanshu - [Email](mailto:vishalsudhanshu01@gmail.com)
 
 Project Link: [https://github.com/VishalSudhanshu/CoinGecko-Crypto](https://github.com/VishalSudhanshu/CoinGecko-Crypto)
 
